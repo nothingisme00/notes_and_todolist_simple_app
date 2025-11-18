@@ -7,14 +7,14 @@ function App() {
   const [activeTab, setActiveTab] = useState('notes');
 
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="min-h-screen py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <header className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+        <header className="text-center mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
             Notes & Todo
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             Aplikasi sederhana untuk mencatat dan mengatur tugas
           </p>
         </header>
@@ -23,24 +23,24 @@ function App() {
         <div className="flex gap-2 mb-6 bg-white rounded-xl p-1 shadow-sm border border-gray-200">
           <button
             onClick={() => setActiveTab('notes')}
-            className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+            className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
               activeTab === 'notes'
                 ? 'bg-primary-600 text-white shadow-sm'
                 : 'text-gray-600 hover:bg-gray-50'
             }`}
           >
-            <StickyNote size={20} />
+            <StickyNote size={18} className="sm:w-5 sm:h-5 flex-shrink-0" />
             <span>Notes</span>
           </button>
           <button
             onClick={() => setActiveTab('todos')}
-            className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+            className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
               activeTab === 'todos'
                 ? 'bg-primary-600 text-white shadow-sm'
                 : 'text-gray-600 hover:bg-gray-50'
             }`}
           >
-            <CheckSquare size={20} />
+            <CheckSquare size={18} className="sm:w-5 sm:h-5 flex-shrink-0" />
             <span>To-Do List</span>
           </button>
         </div>
