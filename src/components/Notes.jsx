@@ -12,13 +12,22 @@ function Notes() {
   useEffect(() => {
     const savedNotes = localStorage.getItem('notes');
     if (savedNotes) {
-      setNotes(JSON.parse(savedNotes));
+      try {
+        setNotes(JSON.parse(savedNotes));
+      } catch (error) {
+        console.error('Error loading notes:', error);
+      }
     }
   }, []);
 
   // Save notes to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('notes', JSON.stringify(notes));
+    if (notes.length > 0) {
+      localStorage.setItem('notes', JSON.stringify(notes));
+    } else {
+      // Clear localStorage when all notes are deleted
+      localStorage.removeItem('notes');
+    }
   }, [notes]);
 
   const handleCreate = () => {
@@ -87,7 +96,7 @@ function Notes() {
   return (
     <div className="space-y-4">
       {/* Search and Add Button */}
-      <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <div className="flex-1 relative">
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -107,7 +116,7 @@ function Notes() {
             setEditingId(null);
             setFormData({ title: '', content: '' });
           }}
-          className="btn-primary flex items-center gap-2"
+          className="btn-primary flex items-center justify-center gap-2 whitespace-nowrap"
         >
           <Plus size={20} />
           <span>Buat Catatan</span>
@@ -180,13 +189,13 @@ function Notes() {
               key={note.id}
               className="card group hover:border-primary-200 transition-all"
             >
-              <div className="flex justify-between items-start gap-4">
+              <div className="flex justify-between items-start gap-2 sm:gap-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2 break-words">
                     {note.title}
                   </h3>
                   {note.content && (
-                    <p className="text-gray-600 whitespace-pre-wrap mb-3">
+                    <p className="text-sm sm:text-base text-gray-600 whitespace-pre-wrap mb-3 break-words">
                       {note.content}
                     </p>
                   )}
@@ -197,20 +206,20 @@ function Notes() {
                     )}
                   </p>
                 </div>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex-shrink-0">
                   <button
                     onClick={() => startEdit(note)}
                     className="btn-icon text-primary-600 hover:bg-primary-50"
                     title="Edit"
                   >
-                    <Edit2 size={18} />
+                    <Edit2 size={16} className="sm:w-[18px] sm:h-[18px]" />
                   </button>
                   <button
                     onClick={() => handleDelete(note.id)}
                     className="btn-icon text-red-600 hover:bg-red-50"
                     title="Hapus"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={16} className="sm:w-[18px] sm:h-[18px]" />
                   </button>
                 </div>
               </div>

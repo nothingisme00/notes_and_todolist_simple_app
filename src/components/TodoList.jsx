@@ -21,13 +21,22 @@ function TodoList() {
   useEffect(() => {
     const savedTodos = localStorage.getItem('todos');
     if (savedTodos) {
-      setTodos(JSON.parse(savedTodos));
+      try {
+        setTodos(JSON.parse(savedTodos));
+      } catch (error) {
+        console.error('Error loading todos:', error);
+      }
     }
   }, []);
 
   // Save todos to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
+    if (todos.length > 0) {
+      localStorage.setItem('todos', JSON.stringify(todos));
+    } else {
+      // Clear localStorage when all todos are deleted
+      localStorage.removeItem('todos');
+    }
   }, [todos]);
 
   const handleAdd = (e) => {
@@ -103,7 +112,7 @@ function TodoList() {
     <div className="space-y-4">
       {/* Add Todo Form */}
       <form onSubmit={handleAdd} className="card">
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3">
           <input
             type="text"
             placeholder="Tambahkan tugas baru..."
@@ -112,9 +121,9 @@ function TodoList() {
             className="input flex-1"
             autoFocus
           />
-          <button type="submit" className="btn-primary flex items-center gap-2">
-            <Plus size={20} />
-            <span>Tambah</span>
+          <button type="submit" className="btn-primary flex items-center gap-1 sm:gap-2 whitespace-nowrap">
+            <Plus size={20} className="flex-shrink-0" />
+            <span className="hidden sm:inline">Tambah</span>
           </button>
         </div>
       </form>
@@ -122,11 +131,11 @@ function TodoList() {
       {/* Filter and Stats */}
       {todos.length > 0 && (
         <div className="card">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setFilter('all')}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all text-sm sm:text-base ${
                   filter === 'all'
                     ? 'bg-primary-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -136,7 +145,7 @@ function TodoList() {
               </button>
               <button
                 onClick={() => setFilter('active')}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all text-sm sm:text-base ${
                   filter === 'active'
                     ? 'bg-primary-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -146,7 +155,7 @@ function TodoList() {
               </button>
               <button
                 onClick={() => setFilter('completed')}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all text-sm sm:text-base ${
                   filter === 'completed'
                     ? 'bg-primary-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -159,7 +168,7 @@ function TodoList() {
             {stats.completed > 0 && (
               <button
                 onClick={clearCompleted}
-                className="text-sm text-red-600 hover:text-red-700 font-medium"
+                className="text-sm text-red-600 hover:text-red-700 font-medium self-start sm:self-auto"
               >
                 Hapus yang Selesai
               </button>
@@ -211,19 +220,19 @@ function TodoList() {
                   />
                   <button
                     onClick={handleUpdate}
-                    className="btn-icon text-green-600 hover:bg-green-50"
+                    className="btn-icon text-green-600 hover:bg-green-50 flex-shrink-0"
                   >
                     <Check size={20} />
                   </button>
                   <button
                     onClick={handleCancelEdit}
-                    className="btn-icon text-gray-600 hover:bg-gray-100"
+                    className="btn-icon text-gray-600 hover:bg-gray-100 flex-shrink-0"
                   >
                     <X size={20} />
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <button
                     onClick={() => handleToggle(todo.id)}
                     className="flex-shrink-0 transition-colors"
@@ -241,7 +250,7 @@ function TodoList() {
 
                   <div className="flex-1 min-w-0">
                     <p
-                      className={`text-lg ${
+                      className={`text-base sm:text-lg break-words ${
                         todo.completed
                           ? 'line-through text-gray-500'
                           : 'text-gray-800'
@@ -251,14 +260,14 @@ function TodoList() {
                     </p>
                   </div>
 
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex-shrink-0">
                     {!todo.completed && (
                       <button
                         onClick={() => handleEdit(todo)}
                         className="btn-icon text-primary-600 hover:bg-primary-50"
                         title="Edit"
                       >
-                        <Edit2 size={18} />
+                        <Edit2 size={16} className="sm:w-[18px] sm:h-[18px]" />
                       </button>
                     )}
                     <button
@@ -266,7 +275,7 @@ function TodoList() {
                       className="btn-icon text-red-600 hover:bg-red-50"
                       title="Hapus"
                     >
-                      <Trash2 size={18} />
+                      <Trash2 size={16} className="sm:w-[18px] sm:h-[18px]" />
                     </button>
                   </div>
                 </div>
